@@ -10,9 +10,21 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const idsTaken = [];
+
+const team = [];
+
 const fieldValidation = async input => {
     if (input === '') {
        return 'Field cannot be left blank';
+    }
+
+    return true;
+}
+
+const idValidation = async input => {
+    if (idsTaken.indexOf(input) !== -1) {
+        return 'Sorry but that id number is already taken. Please pick a different id number';
     }
 
     return true;
@@ -59,9 +71,83 @@ function managerFunc() {
         let email = res.managerEmail;
         let officeNum = res.managerOffice;
 
+        idsTaken.push(id);
+
         var manager = new Manager(name, id, email, officeNum);
 
-        console.log(manager)
+        team.push(manager);
+
+        console.log(team)
+
+        anotherEmployeeFunc();
+    })
+}
+
+function engineerFunc() {
+    const engineerQuestions = [
+        {
+            type: 'input',
+            name: 'engineerName',
+            message: 'What is the name of this Engineer?',
+            validate: fieldValidation
+        },
+        {
+            type: 'input',
+            name: 'engineerId',
+            message: 'What is the Engineer\'s id number?',
+            validate: idValidation
+        },
+        {
+            type: 'input',
+            name: 'engineerEmail',
+            message: 'What is the Engineer\'s email?',
+            validate: fieldValidation
+        },
+        {
+            type: 'input',
+            name: 'engineerGithub',
+            message: 'Finally, what is the Engineer\'s Github username?',
+            validate: fieldValidation
+        }
+    ]
+
+    inquirer.prompt(engineerQuestions).then(res => {
+        let name = res.engineerName;
+        let id = res.engineerId;
+        let email = res.engineerEmail;
+        let github = res.engineerGithub;
+
+        idsTaken.push(id);
+
+        var engineer = new Engineer(name, id, email, github);
+
+        team.push(engineer);
+
+        console.log(team)
+
+        anotherEmployeeFunc();
+    })
+}
+
+function anotherEmployeeFunc() {
+    const anotherEmployeeQuestions = [
+        {
+            type: 'list',
+            name: 'continue',
+            message: 'Would you like to add another team member?',
+            choices: ['Engineer', 'Intern', 'No thanks']
+        }
+    ]
+
+    inquirer.prompt(anotherEmployeeQuestions).then(res => {
+        switch (res.continue) {
+            case 'Engineer':
+                engineerFunc();
+                break;
+            case 'Intern':
+                break;
+            default:
+        }
     })
 }
 
