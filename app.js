@@ -10,9 +10,60 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const fieldValidation = async input => {
+    if (input === '') {
+       return 'Field cannot be left blank';
+    }
+
+    return true;
+}
+
+managerFunc();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+
+function managerFunc() {
+    const managerQuestions = [
+        {
+            type: 'input',
+            name: 'managerName',
+            message: 'What is the name of your manager?',
+            validate: fieldValidation
+        },
+        {
+            type: 'input',
+            name: 'managerId',
+            message: 'What is your manager\'s id number?',
+            validate: fieldValidation
+        },
+        {
+            type: 'input',
+            name: 'managerEmail',
+            message: 'What is your manager\'s email?',
+            validate: fieldValidation
+        },
+        {
+            type: 'input',
+            name: 'managerOffice',
+            message: 'Finally, what is your manager\'s office number?',
+            validate: fieldValidation
+        }
+    ];
+
+    console.log('Let\'s buld your team!')
+
+    inquirer.prompt(managerQuestions).then(res => {
+        let name = res.managerName;
+        let id = res.managerId;
+        let email = res.managerEmail;
+        let officeNum = res.managerOffice;
+
+        var manager = new Manager(name, id, email, officeNum);
+
+        console.log(manager)
+    })
+}
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
