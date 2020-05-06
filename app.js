@@ -165,8 +165,6 @@ function internFunc() {
 
         team.push(intern);
 
-        console.log(team);
-
         anotherEmployeeFunc();
     })
 }
@@ -190,6 +188,16 @@ function anotherEmployeeFunc() {
                 internFunc();
                 break;
             default:
+                if (!fs.existsSync('./output')) {
+                    fs.mkdir('./output', err => {
+                        if (err) console.log(err)
+                    })
+                }
+
+
+                fs.writeFile(outputPath, render(team), () => {
+                    console.log('Your team has been generated!');
+                })
         }
     })
 }
