@@ -73,11 +73,9 @@ function managerFunc() {
 
         idsTaken.push(id);
 
-        var manager = new Manager(name, id, email, officeNum);
+        const manager = new Manager(name, id, email, officeNum);
 
         team.push(manager);
-
-        console.log(team)
 
         anotherEmployeeFunc();
     })
@@ -119,11 +117,55 @@ function engineerFunc() {
 
         idsTaken.push(id);
 
-        var engineer = new Engineer(name, id, email, github);
+        const engineer = new Engineer(name, id, email, github);
 
         team.push(engineer);
 
-        console.log(team)
+        anotherEmployeeFunc();
+    })
+}
+
+function internFunc() {
+    const internQuestions = [
+        {
+            type: 'input',
+            name: 'internName',
+            message: 'What is the name of the Intern?',
+            validate: fieldValidation
+        },
+        {
+            type: 'input',
+            name: 'internId',
+            message: 'What is the Intern\'s id number?',
+            validate: idValidation
+        },
+        {
+            type: 'input',
+            name: 'internEmail',
+            message: 'What is the Intern\'s email?',
+            validate: fieldValidation
+        },
+        {
+            type: 'input',
+            name: 'internSchool',
+            message: 'Finally, what school did the Intern attend?',
+            validate: fieldValidation
+        }
+    ];
+
+    inquirer.prompt(internQuestions).then(res => {
+        let name = res.internName;
+        let id = res.internId;
+        let email = res.internEmail;
+        let school = res.internSchool;
+
+        idsTaken.push(id);
+
+        const intern = new Intern(name, id, email, school);
+
+        team.push(intern);
+
+        console.log(team);
 
         anotherEmployeeFunc();
     })
@@ -145,6 +187,7 @@ function anotherEmployeeFunc() {
                 engineerFunc();
                 break;
             case 'Intern':
+                internFunc();
                 break;
             default:
         }
