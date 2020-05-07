@@ -4,15 +4,19 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const style = require("./style");
 
+// Output paths
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
-// const outputPath2 = path.join(OUTPUT_DIR, "style.css");
+const outputPath2 = path.join(OUTPUT_DIR, "style.css");
 
 const render = require("./lib/htmlRenderer");
 
+// This empty array will be used to make sure that Employees don't have the same id
 const idsTaken = [];
 
+// The user's response will be pushed to this empty array, after they're done this array will be used for the render function.
 const team = [];
 
 const fieldValidation = async input => {
@@ -167,6 +171,7 @@ function internFunc() {
     })
 }
 
+// This function will be called after everytime the user is finished with an inquirer prompt
 function anotherEmployeeFunc() {
     const anotherEmployeeQuestions = [
         {
@@ -186,20 +191,20 @@ function anotherEmployeeFunc() {
                 internFunc();
                 break;
             default:
-                console.log(team)
-
+                // If the output folder does not exist then one will be made
                 if (!fs.existsSync(OUTPUT_DIR)) {
                     fs.mkdirSync(OUTPUT_DIR, err => {
                         if (err) console.log(err)
                     })
                 }
 
+                // Write file for the team cards
                 fs.writeFileSync(outputPath, render(team), 'utf-8');
 
-                console.log('Your team has been generated!')
-                
-                // Saving this for later
-                // fs.writeFileSync(outputPath2, style, 'utf-8');
+                // Write file for the CSS styling module
+                fs.writeFileSync(outputPath2, style, 'utf-8');
+
+                console.log('Your team has been generated!');
         }
     })
 }
