@@ -28,7 +28,7 @@ npm i
 
 ## Usage
 
-After installing the needed dependencies, run the command: node app.js, then answer the questions. After you're done, an output folder will be made with the HTML and CSS for your teams profiles generated for you! Here is a [video to demonstrate how it works.](#)
+After installing the needed dependencies, run the command: node app.js, then answer the questions. After you're done, an output folder will be made with the HTML and CSS for your teams profiles generated for you! Here is a [video to demonstrate how it works.](https://youtu.be/f2wOC2S2Brc)
 
 ## Tests
 
