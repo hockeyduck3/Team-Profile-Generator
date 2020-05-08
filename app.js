@@ -4,7 +4,7 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
-const style = require("./style");
+const style = require("./lib/style");
 
 // Output paths
 const OUTPUT_DIR = path.resolve(__dirname, "output");
@@ -20,7 +20,7 @@ const idsTaken = [];
 const team = [];
 
 const fieldValidation = async input => {
-    if (input === '') {
+    if (input.trim() === '') {
        return 'Field cannot be left blank';
     }
 
@@ -28,9 +28,29 @@ const fieldValidation = async input => {
 }
 
 const idValidation = async input => {
-    if (idsTaken.indexOf(input) !== -1) {
+    if (input.trim() === '') {
+      return 'id cannot be empty'
+    } 
+    else if (!input.match(/[0-9]/)) {
+        return 'id needs to be a number.'
+    } 
+    else if (idsTaken.indexOf(input) !== -1) {
         return 'Sorry but that id number is already taken. Please pick a different id number';
     }
+
+    return true;
+}
+
+const emailValidation = async input => {    
+    if (input.trim() === '') {
+        return 'Email cannot be empty.';
+    } 
+
+    // Got this simple email validation regex from: http://regexlib.com/Search.aspx?k=email
+    else if (!input.trim().match(/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/)) {
+        return 'Must be a valid email address';
+    }
+
 
     return true;
 }
@@ -49,13 +69,13 @@ function managerFunc() {
             type: 'input',
             name: 'managerId',
             message: 'What is your manager\'s id number?',
-            validate: fieldValidation
+            validate: idValidation
         },
         {
             type: 'input',
             name: 'managerEmail',
             message: 'What is your manager\'s email?',
-            validate: fieldValidation
+            validate: emailValidation
         },
         {
             type: 'input',
@@ -65,7 +85,7 @@ function managerFunc() {
         }
     ];
 
-    console.log('Let\'s buld your team!')
+    console.log('Let\'s buld your team!\n');
 
     inquirer.prompt(managerQuestions).then(res => {
         let name = res.managerName;
@@ -101,7 +121,7 @@ function engineerFunc() {
             type: 'input',
             name: 'engineerEmail',
             message: 'What is the Engineer\'s email?',
-            validate: fieldValidation
+            validate: emailValidation
         },
         {
             type: 'input',
@@ -145,7 +165,7 @@ function internFunc() {
             type: 'input',
             name: 'internEmail',
             message: 'What is the Intern\'s email?',
-            validate: fieldValidation
+            validate: emailValidation
         },
         {
             type: 'input',
@@ -173,6 +193,9 @@ function internFunc() {
 
 // This function will be called after everytime the user is finished with an inquirer prompt
 function anotherEmployeeFunc() {
+    // This is just to help keep things seperate in the console, therefore making it a little easier to read.
+    console.log("\n----------------------\n");
+
     const anotherEmployeeQuestions = [
         {
             type: 'list',
@@ -203,6 +226,8 @@ function anotherEmployeeFunc() {
 
                 // Write file for the CSS styling module
                 fs.writeFileSync(outputPath2, style, 'utf-8');
+
+                console.log("\n----------------------\n");
 
                 console.log('Your team has been generated!');
         }
